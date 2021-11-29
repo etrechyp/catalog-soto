@@ -1,7 +1,5 @@
+import CatalogContainer from "../../containers/CatalogContainer"
+
 export default function Catalog() {
-    return (
-        <div>
-            catalogo
-        </div>
-    )
+    return <CatalogContainer />
 }

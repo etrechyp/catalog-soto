@@ -1,4 +1,3 @@
-import { useContext } from "react"
 import AuthContextProvider from "../context/AuthContext"
 import LogInForm from "../components/Index/LogInForm"
 
