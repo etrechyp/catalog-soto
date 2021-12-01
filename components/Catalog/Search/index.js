@@ -1,5 +1,4 @@
 import {
-  Box,
   Select,
   MenuItem,
   TextField,
@@ -19,7 +18,8 @@ export default function Search() {
         label='Categorias'
         // onChange={handleChange}
         sx={{
-          flexBasis: '10rem',
+          flex: 1,
+          flexGrow: 2,
         }}
       >
         <MenuItem value={'one'}>Ten</MenuItem>
@@ -32,9 +32,17 @@ export default function Search() {
         type='search'
         sx={{
           flex: '1',
+          flexGrow: 10,
         }}
       />
-      <Button variant='outlined' startIcon={<FaSearch />}>
+      <Button
+        variant='outlined'
+        startIcon={<FaSearch />}
+        sx={{
+          flex: 1,
+          flexGrow: 2,
+        }}
+      >
         Buscar
       </Button>
     </FormControl>

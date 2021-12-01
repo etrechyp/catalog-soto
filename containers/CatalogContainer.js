@@ -1,4 +1,4 @@
-import CatalogLayout from '../layouts/catalog';
+import DashboardLayout from '../layouts/dashboard';
 import AuthContextProvider from '../context/AuthContext';
 import { Box } from '@mui/material';
 import BrandsCarrousel from '../components/Catalog/BrandsCarrousel';
@@ -8,7 +8,7 @@ import Products from '../components/Catalog/Products';
 export default function CatalogContainer() {
   return (
     <AuthContextProvider>
-      <CatalogLayout>
+      <DashboardLayout>
         <Box
           sx={{
             display: 'flex',
@@ -25,7 +25,7 @@ export default function CatalogContainer() {
           <BrandsCarrousel />
           <Products />
         </Box>
-      </CatalogLayout>
+      </DashboardLayout>
     </AuthContextProvider>
   );
 }

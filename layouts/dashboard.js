@@ -4,7 +4,7 @@ import TopNavigationBar from '../components/shared/TopNavigationBar';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
-export default function CatalogLayout({ children }) {
+export default function DashboardLayout({ children }) {
   const [sideBarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
