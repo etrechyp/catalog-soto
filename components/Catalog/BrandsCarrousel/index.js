@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { Box, Paper, Skeleton } from '@mui/material';
+import { Box, Paper, Skeleton, Typography } from '@mui/material';
 import Carousel from 'react-elastic-carousel';
 
-export default function BrandsCarrousel() {
+export default function BrandsCarrousel({languageSelected}) {
   const brands = true;
   const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -125,7 +125,10 @@ export default function BrandsCarrousel() {
         alignItems: 'center',
       }}
     >
-      <h4>Ver productos por marca:</h4>
+      <Typography variant="h4" sx={{
+        margin: "2rem",
+        textTransform: 'uppercase'
+      }}>{languageSelected["SEARCH_PRODUCT_BY_BRAND"]}</Typography>
 
       <Box
         sx={{

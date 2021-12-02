@@ -1,11 +1,14 @@
+import { useContext } from 'react';
 import { useState, useEffect } from 'react';
 import SideNavigationBar from '../components/shared/SideNavigationBar';
 import TopNavigationBar from '../components/shared/TopNavigationBar';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
+import { LanguageContext } from '../context/LanguageContext';
 
 export default function DashboardLayout({ children }) {
   const [sideBarOpen, setSidebarOpen] = useState(false);
+  const { languageSelected } = useContext(LanguageContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,10 +19,14 @@ export default function DashboardLayout({ children }) {
 
   return (
     <>
-      <TopNavigationBar setSidebarOpen={setSidebarOpen} />
+      <TopNavigationBar
+        setSidebarOpen={setSidebarOpen}
+        languageSelected={languageSelected}
+      />
       <SideNavigationBar
         sideBarOpen={sideBarOpen}
         setSidebarOpen={setSidebarOpen}
+        languageSelected={languageSelected}
       />
       <Box
         sx={{
@@ -29,7 +36,7 @@ export default function DashboardLayout({ children }) {
           justifyContent: 'center',
           position: 'absolute',
           padding: '1rem',
-          marginTop: '8rem'
+          marginTop: '8rem',
         }}
       >
         {children}

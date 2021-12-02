@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AppBar, Toolbar, Box, Badge, IconButton } from '@mui/material';
 import { IoMenuOutline } from 'react-icons/io5';
 import { IoCart } from 'react-icons/io5';
+import SelectLanguage from "../SelectLanguage";
 import Link from 'next/link';
 import styles from './styles';
 
@@ -12,6 +13,7 @@ export default function TopNavigationBar({ setSidebarOpen }) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static' sx={styles.navbarBox}>
         <Toolbar sx={styles.navbarBoxFlexWrapper}>
+          <SelectLanguage />
           <Link href='/cart' passHref>
             <a>
               <Badge badgeContent={10} color='primary' sx={styles.badge}>

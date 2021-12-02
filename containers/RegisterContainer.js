@@ -1,10 +1,13 @@
-import AuthContextProvider from "../context/AuthContext"
-import SignUpForm from "../components/Register/SignUpForm"
+import AuthContextProvider from '../context/AuthContext';
+import SignUpForm from '../components/Register/SignUpForm';
+import LoginSignupLayout from '../layouts/LoginSignupLayout';
 
 export default function IndexContainer() {
-    return (
-        <AuthContextProvider>
-            <SignUpForm />
-        </AuthContextProvider>
-    )
+  return (
+    <AuthContextProvider>
+      <LoginSignupLayout>
+        <SignUpForm />
+      </LoginSignupLayout>
+    </AuthContextProvider>
+  );
 }

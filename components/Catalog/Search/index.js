@@ -8,18 +8,21 @@ import {
 } from '@mui/material';
 import { FaSearch } from 'react-icons/fa';
 
-export default function Search() {
+export default function Search({ languageSelected }) {
+
   return (
     <FormControl sx={{ display: 'flex', flexDirection: 'row' }}>
-      <InputLabel id='categories-select'>Categorias</InputLabel>
+      <InputLabel id='categories-select'>{languageSelected['CATEGORIES']}</InputLabel>
       <Select
         labelId='categories-select'
         value='one'
-        label='Categorias'
+        label={languageSelected['CATEGORIES']}
         // onChange={handleChange}
         sx={{
           flex: 1,
           flexGrow: 2,
+          borderTopRightRadius: '0px',
+          borderBottomRightRadius: '0px'
         }}
       >
         <MenuItem value={'one'}>Ten</MenuItem>
@@ -28,11 +31,17 @@ export default function Search() {
       </Select>
       <TextField
         id='outlined-search'
-        label='Search field'
+        label={languageSelected['SEARCH_PLACEHOLDER']}
         type='search'
         sx={{
           flex: '1',
           flexGrow: 10,
+          [`& fieldset`]: {//removes border radius from mui textfield variant outlined
+            borderRadius: 0,
+          },
+        }}
+        style={{
+
         }}
       />
       <Button
@@ -41,9 +50,11 @@ export default function Search() {
         sx={{
           flex: 1,
           flexGrow: 2,
+          borderTopLeftRadius: '0px',
+          borderBottomLeftRadius: '0px'
         }}
       >
-        Buscar
+        {languageSelected['SEARCH']}
       </Button>
     </FormControl>
   );

@@ -1,11 +1,12 @@
-
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Button, Typography, Grid, TextField } from '@mui/material';
 import { BsCartPlus } from 'react-icons/bs';
 import { MdPriceChange } from 'react-icons/md';
+import { LanguageContext } from '../../../context/LanguageContext';
 import styles from './styles';
 
 export default function ProductDetails() {
+  const { languageSelected } = useContext(LanguageContext);
   const [numberOfItemsSelected, setNumberOfItemsSelected] = useState(0);
   const price = 20;
   return (
@@ -34,7 +35,7 @@ export default function ProductDetails() {
         <Grid item container direction='column' xs={2}>
           <Typography variant='h6'>
             <MdPriceChange />
-            Precio unitario: $20
+            {languageSelected['UNIT_PRICE']}: $20
           </Typography>
         </Grid>
         <Grid item container direction='column' xs={2}>
@@ -65,7 +66,7 @@ export default function ProductDetails() {
             sx={{ width: '100%' }}
             endIcon={<BsCartPlus />}
           >
-            Add to cart
+            {languageSelected['ADD_TO_CART']}
           </Button>
         </Grid>
       </Grid>

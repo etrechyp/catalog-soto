@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Box, Button, Paper, TextField } from '@mui/material';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { BsPersonPlus } from 'react-icons/bs';
@@ -6,9 +7,11 @@ import Link from 'next/link';
 import styles from './styles';
 import props from './props';
 import useLogInForm from '../../hooks/useLogInForm';
+import { LanguageContext } from '../../context/LanguageContext';
 
 export default function LogInForm() {
   const { emailField, password, handleChange, handleLogin } = useLogInForm();
+  const { languageSelected } = useContext(LanguageContext);
 
   return (
     <Box sx={styles.wrapper}>
@@ -32,11 +35,11 @@ export default function LogInForm() {
                 handleLogin
               )}
             >
-              Log In
+              {languageSelected['LOG_IN']}
             </Button>
             <Link href='/register' passHref>
               <Button variant='outlined' startIcon={<BsPersonPlus />}>
-                Register
+                {languageSelected['REGISTER']}
               </Button>
             </Link>
           </Box>
