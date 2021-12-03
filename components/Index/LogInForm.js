@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { BsPersonPlus } from 'react-icons/bs';
 import Image from 'next/image';
