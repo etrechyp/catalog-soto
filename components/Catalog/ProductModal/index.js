@@ -1,6 +1,4 @@
-import { Box, Button, Typography, Modal, Grid, TextField } from '@mui/material';
-import { BsCartPlus } from 'react-icons/bs';
-import { MdPriceChange } from 'react-icons/md';
+import { Box, Modal, Grid } from '@mui/material';
 import ProductImagesSelector from './ProductImagesSelector';
 import SelectedImage from './SelectedImage';
 import styles from './styles';

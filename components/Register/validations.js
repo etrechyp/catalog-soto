@@ -29,4 +29,11 @@ const personalInfoFormvalidationSchema = yup.object().shape({
     .required(),
 });
 
-export { personalInfoFormvalidationSchema };
+const companyOccupationValidationSchema = yup.object().shape({
+  companyName: yup.string().required(),
+  organizationType: yup.string().required(),
+  businessStyle: yup.string().required(),
+  yearStablished: yup.number().required(),
+});
+
+export { personalInfoFormvalidationSchema, companyOccupationValidationSchema };

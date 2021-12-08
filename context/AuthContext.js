@@ -3,7 +3,10 @@ import { createContext, useReducer } from 'react';
 const authData = {
   loggedIn: false,
   email: '',
-  name: '',
+  firstName: '',
+  lastName: '',
+  isAdmin: false,
+  sellerCloudTokenData: null,
 };
 
 const authReducer = (state, action) => {
@@ -15,7 +18,9 @@ const authReducer = (state, action) => {
       return {
         loggedIn: true,
         email: action.user.email,
-        name: action.user.name,
+        firstName: action.user.firstName,
+        lastName: action.user.lastName,
+        isAdmin: action.user.isAdmin,
       };
     case 'LOGOUT':
       localStorage.removeItem('userData');
@@ -23,8 +28,18 @@ const authReducer = (state, action) => {
       return {
         loggedIn: false,
         email: '',
-        name: '',
+        firstName: '',
+        lastName: '',
+        isAdmin: false,
+        sellerCloudTokenData: null,
       };
+    case 'SELLERCLOUD_REQUEST_TOKEN':
+      localStorage.setItem(
+        'sellerCloudDataToken',
+        JSON.stringify(action.tokenData)
+      );
+
+      return { ...state, sellerCloudTokenData: action.tokenData };
     default:
       return state;
   }
@@ -33,24 +48,30 @@ const authReducer = (state, action) => {
 export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-  const [userData, dispatchAuth] = useReducer(authReducer, authData, authObject => {
-    const ISSERVER = typeof window === "undefined";
+  const [userData, dispatchAuth] = useReducer(
+    authReducer,
+    authData,
+    (authObject) => {
+      const ISSERVER = typeof window === 'undefined';
 
-    if(!ISSERVER) {
-      let storedSession = localStorage.getItem("userData");
-      if(storedSession) {
-        storedSession = JSON.parse(storedSession)
-        console.log(storedSession);
-        return {
-          loggedIn: true,
-          email: storedSession.email,
-          name: storedSession.name,
-        };
+      if (!ISSERVER) {
+        let storedSession = localStorage.getItem('userData');
+        if (storedSession) {
+          storedSession = JSON.parse(storedSession);
+
+          return {
+            loggedIn: true,
+            email: storedSession.email,
+            firstName: storedSession.firstName,
+            lastName: storedSession.lastName,
+            isAdmin: storedSession.isAdmin,
+          };
+        }
+
+        return authObject;
       }
-
-      return authObject;
     }
-  });
+  );
 
   return (
     <AuthContext.Provider value={{ userData, dispatchAuth }}>

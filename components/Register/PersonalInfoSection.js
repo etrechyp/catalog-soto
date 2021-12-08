@@ -35,7 +35,10 @@ const PersonalInfoSection = ({
       onSubmit={(values) => {
         setGlobalFormData((prevData) => ({
           ...prevData,
-          globalData: values,
+          globalData: {
+            ...prevData.globalData,
+            ...values
+          },
           currentStep: 1,
         }));
       }}

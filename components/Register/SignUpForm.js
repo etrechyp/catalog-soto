@@ -1,12 +1,11 @@
-import { useState, useContext } from 'react';
-import { Paper, Box, TextField, Stepper, Step, StepLabel } from '@mui/material';
+import { Paper, Box, Stepper, Step, StepLabel } from '@mui/material';
 import Image from 'next/image';
 import styles from './styles';
 import props from './props';
 import PersonalInfoSection from './PersonalInfoSection';
 import CompanyOcuppationSection from './CompanyOccupationSection';
-
-import { LanguageContext } from '../../context/LanguageContext';
+import useSignUpForm from '../../hooks/useSignUpForm';
+import Link from 'next/link';
 
 const CompanyLogo = () => {
   return (
@@ -17,32 +16,27 @@ const CompanyLogo = () => {
 };
 
 const SignUpForm = () => {
-  const { languageSelected } = useContext(LanguageContext);
-  const [globalFormData, setGlobalFormData] = useState({
-    globalData: {
-      firstName: 'Luis',
-      lastName: 'Barboza',
-      email: 'lbarbozanav@gmail.com',
-      password: '123456',
-      address: 'Venezuela, por alli',
-      country: 'VE',
-      state: 'V',
-      city: 'Maracaibo',
-      phone: '+584246030352',
-      zipCode: '40056', 
-      companyName: '',
-      organizationType: '',
-      businessStyle: '',
-      yearStablished: '',
-    },
-    steps: ['PERSONAL_INFO', 'COMPANY_OCCUPATION'],
-    currentStep: 0,
-  });
+  const {
+    languageSelected,
+    globalFormData,
+    setGlobalFormData,
+    organizationTypes,
+    businessStyles,
+    returnToFirstSection,
+    snackbar,
+    setSnackbar,
+    handleOpenCloseSnackbar,
+  } = useSignUpForm();
 
   return (
     <Box sx={styles.wrapper}>
       <Paper sx={styles.signUpFormBox}>
         <CompanyLogo />
+        <Link href='/'>
+          <a style={{ color: 'blue' }}>
+            {languageSelected['HAVE_YOU_REGISTERED_ALREADY']}
+          </a>
+        </Link>
         <Stepper activeStep={globalFormData.currentStep} alternativeLabel>
           {globalFormData.steps.map((label) => (
             <Step key={label}>
@@ -61,6 +55,12 @@ const SignUpForm = () => {
             globalFormData={globalFormData.globalData}
             setGlobalFormData={setGlobalFormData}
             languageSelected={languageSelected}
+            organizationTypes={organizationTypes}
+            businessStyles={businessStyles}
+            returnToFirstSection={returnToFirstSection}
+            snackbar={snackbar}
+            setSnackbar={setSnackbar}
+            handleOpenCloseSnackbar={handleOpenCloseSnackbar}
           />
         )}
       </Paper>

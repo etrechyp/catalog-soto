@@ -10,8 +10,11 @@
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
+    "@material-table/core": "^0.2.9",
+    "@mui/icons-material": "^5.2.1",
     "@mui/lab": "^5.0.0-alpha.58",
     "@mui/material": "^5.1.1",
+    "@mui/x-data-grid": "^5.1.0",
     "country-state-city": "^3.0.1",
     "ebay-oauth-nodejs-client": "^1.2.1",
     "formik": "^2.2.9",

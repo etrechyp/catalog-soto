@@ -8,50 +8,66 @@ import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from 'react-icons/md';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import { LocalizationProvider, DatePicker } from '@mui/lab';
 import moment from 'moment';
+import CustomizedSnackbars from '../shared/CustomSnackbars';
+import { companyOccupationValidationSchema } from './validations';
+import { useRouter } from 'next/router';
 
 const CompanyOcuppationSection = ({
   globalFormData,
   setGlobalFormData,
   languageSelected,
+  organizationTypes,
+  businessStyles,
+  returnToFirstSection,
+  snackbar,
+  setSnackbar,
+  handleOpenCloseSnackbar,
 }) => {
-  const organizationTypes = [
-    languageSelected['PRIVATE_CORPORATION'],
-    languageSelected['PUBLIC_CORPORATION'],
-  ];
-
-  const businessStyles = [
-    languageSelected['DISTRIBUTOR'],
-    languageSelected['STORE'],
-  ];
-
-  const returnToFirstSection = () =>
-    setGlobalFormData((prevGlobalData) => ({
-      ...prevGlobalData,
-      currentStep: 0,
-    }));
+  const { companyName, organizationType, businessStyle, yearStablished } =
+    globalFormData;
+  const router = useRouter();
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Formik
         initialValues={{
-          companyName: globalFormData.companyName,
-          organizationType: globalFormData.organizationType,
-          businessStyle: globalFormData.businessStyle,
-          yearStablished: globalFormData.yearStablished,
+          companyName: companyName,
+          organizationType: organizationType,
+          businessStyle: businessStyle,
+          yearStablished: yearStablished,
         }}
+        onSubmit={async (values) => {
+          const requestBody = {
+            ...globalFormData,
+            ...values,
+          };
+          const response = await fetch('http://192.168.88.2:8082/api/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+          });
+
+          const responseData = await response.json();
+
+          if (responseData.ok) {
+            setSnackbar({
+              open: true,
+              severity: 'success',
+              message: languageSelected['USER_REGISTERED'],
+            });
+
+            setTimeout(() => {
+              router.push('/');
+            }, 8000);
+          }
+        }}
+        validationSchema={companyOccupationValidationSchema}
       >
-        {({ values, setFieldValue }) => (
-          <Form style={{ width: '100%' }}>
-            <Box
-              sx={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                gap: '1rem',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
+        {({ values, setFieldValue, isSubmitting }) => (
+          <Form style={styles.formWrapper}>
+            <Box sx={styles.formFlexbox}>
               <MyTextField
                 placeholder={languageSelected['COMPANY_NAME']}
                 name='companyName'
@@ -103,17 +119,26 @@ const CompanyOcuppationSection = ({
               >
                 <Button
                   variant='outlined'
-                  endIcon={<MdOutlineNavigateBefore />}
+                  startIcon={<MdOutlineNavigateBefore />}
                   sx={{ width: '100%' }}
-                  onClick={returnToFirstSection}
+                  onClick={() => {
+                    returnToFirstSection(
+                      values.companyName,
+                      values.organizationType,
+                      values.businessStyle,
+                      values.yearStablished
+                    );
+                  }}
                 >
                   {languageSelected['PREVIOUS']}
                 </Button>
                 <LoadingButton
+                  loading={isSubmitting}
                   variant='outlined'
                   endIcon={<MdOutlineNavigateNext />}
                   sx={{ width: '100%' }}
-                  disabled
+                  //disabled
+                  type='submit'
                 >
                   {languageSelected['SUBMIT']}
                 </LoadingButton>
@@ -122,6 +147,14 @@ const CompanyOcuppationSection = ({
           </Form>
         )}
       </Formik>
+
+      <CustomizedSnackbars
+        snackbarDuration={8000}
+        openSnackbar={snackbar.open}
+        handleCloseSnackbar={() => handleOpenCloseSnackbar('CLOSE')}
+        severity={snackbar.severity}
+        snackbarMessage={snackbar.message}
+      />
     </LocalizationProvider>
   );
 };

@@ -14,6 +14,8 @@ const english_locale = {
   PRODUCTS: 'Products',
   CART: 'Cart',
   DOWNLOAD_CART_DATA: 'Download cart data',
+  EDIT: 'Edit',
+  DELETE: 'Delete',
   DELETE_ALL_FROM_CART: 'Delete all products',
   TOTAL_CART: 'Total cost',
   PERSONAL_INFO: 'Personal Info',
@@ -41,6 +43,19 @@ const english_locale = {
   STORE: 'Store',
   YEAR_STABLISHED: 'Year stablished',
   ZIP_CODE: 'Zip code',
+  SUBMITTED_DATA: 'Data submitted successfully.',
+  HAVE_YOU_REGISTERED_ALREADY: 'Have you registered already? Log in here',
+  REQUIRED_FIELD: 'This field is required',
+  MANAGE_ACCOUNTS: 'Manage accounts',
+  TABLE_PAGINATION_COUNT: '{from}-{to} of {count}',
+  ACTIONS: 'Actions',
+  ROWS_PER_PAGE: 'Rows per page',
+  ROWS: 'Rows',
+  VERIFIED: 'Verified',
+  EMPTY_FIELDS: 'Empty fields',
+  USER_REGISTERED:
+    'User registered, please wait 1 business day while we verify your information',
+  DELETE_USER_MESSAGE: 'Are you sure you want to delete this user?',
+  INFORMATION_ABOUT: (firtName, lastName) => `${firtName} ${lastName} Info`,
 };
-
 export default english_locale;

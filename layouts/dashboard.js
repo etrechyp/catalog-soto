@@ -12,8 +12,14 @@ export default function DashboardLayout({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!localStorage.getItem('userData')) {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    if (!userData) {
       router.push('/');
+    }
+
+    if(router.pathname === "/users" && userData && !userData.isAdmin){
+      router.push("/catalog");
     }
   }, []);
 

@@ -14,6 +14,8 @@ const spanish_locale = {
   PRODUCTS: 'Productos',
   CART: 'Carrito',
   DOWNLOAD_CART_DATA: 'Descargar datos del carrito',
+  EDIT: 'Editar',
+  DELETE: 'Borrar',
   DELETE_ALL_FROM_CART: 'Borrar todos los productos',
   TOTAL_CART: 'Precio total',
   PERSONAL_INFO: 'Información personal',
@@ -41,6 +43,20 @@ const spanish_locale = {
   STORE: 'Tienda',
   YEAR_STABLISHED: 'Año de creación',
   ZIP_CODE: 'Código Zip',
+  SUBMITTED_DATA: 'Datos subidos de manera exitosa',
+  HAVE_YOU_REGISTERED_ALREADY: 'Ya te has registrado? Inicia sesión aquí',
+  REQUIRED_FIELD: 'Este campo es requerido',
+  MANAGE_ACCOUNTS: 'Gestionar cuentas',
+  TABLE_PAGINATION_COUNT: '{from}-{to} de {count}',
+  ACTIONS: 'Acciones',
+  ROWS_PER_PAGE: 'Filas por página',
+  ROWS: 'Filas',
+  VERIFIED: 'Verificado',
+  EMPTY_FIELDS: 'Campos vacios',
+  USER_REGISTERED:
+    'Usuario registrado, por favor, espere 1 dia hábil mientras verificamos su información',
+  DELETE_USER_MESSAGE: 'Estás seguro de que deseas borrar este usuario?',
+  INFORMATION_ABOUT: (firtName, lastName) => `Informacion sobre ${firtName} ${lastName}`
 };
 
 export default spanish_locale;
