@@ -34,6 +34,7 @@ const styles = {
   },
   productImageThumbnail: {
     flex: 1,
+    margin: '0.2rem 0rem',
     borderBottom: '1px solid gray',
     justifyContent: 'center',
     alignItems: 'center',
@@ -75,6 +76,11 @@ const styles = {
     color: 'gray',
     fontWeight: 'light',
     fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
+  },
+  skeleton: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '5px',
   },
 };
 

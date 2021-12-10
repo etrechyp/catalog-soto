@@ -1,10 +1,23 @@
-import { Box, Modal, Grid } from '@mui/material';
+import { Modal, Box, Grid } from '@mui/material';
 import ProductImagesSelector from './ProductImagesSelector';
 import SelectedImage from './SelectedImage';
 import styles from './styles';
 import ProductDetails from './ProductDetails';
+import useProductImages from '../../../hooks/useProductImages';
 
-export default function ProductModal({ open, handleClose }) {
+export default function ProductModal({ open, handleClose, product }) {
+  const {
+    ID: productId,
+    eBayTopTitle,
+    ShortDescription,
+    ImageUrl: defaultImage,
+    WholeSalePrice,
+  } = product;
+  const {
+    images,
+    changeSelectedImage
+  } = useProductImages(productId, defaultImage);
+
   return (
     <Modal
       open={open}
@@ -22,9 +35,21 @@ export default function ProductModal({ open, handleClose }) {
             padding: '0rem 1rem',
           }}
         >
-          <ProductImagesSelector />
-          <SelectedImage />
-          <ProductDetails />
+          <ProductImagesSelector
+            loading={images.loading}
+            images={images.data}
+            setSelectedImage={changeSelectedImage}
+          />
+          <SelectedImage
+            loading={images.loading}
+            image={images.selectedImage}
+          />
+          <ProductDetails
+            productTitle={eBayTopTitle}
+            ShortDescription={ShortDescription}
+            WholeSalePrice={WholeSalePrice}
+            loading={images.loading}
+          />
         </Grid>
       </Box>
     </Modal>

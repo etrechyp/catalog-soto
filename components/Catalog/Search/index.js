@@ -1,3 +1,4 @@
+import { useState, useContext } from 'react';
 import {
   Select,
   MenuItem,
@@ -7,22 +8,27 @@ import {
   FormControl,
 } from '@mui/material';
 import { FaSearch } from 'react-icons/fa';
+import { CatalogContext } from '../../../context/CatalogContext';
 
 export default function Search({ languageSelected }) {
+  const { dispatchCatalog } = useContext(CatalogContext);
+  const [search, setSearch] = useState('');
 
   return (
     <FormControl sx={{ display: 'flex', flexDirection: 'row' }}>
-      <InputLabel id='categories-select'>{languageSelected['CATEGORIES']}</InputLabel>
+      <InputLabel id='categories-select'>
+        {languageSelected['CATEGORIES']}
+      </InputLabel>
       <Select
         labelId='categories-select'
-        value='one'
+        value=''
         label={languageSelected['CATEGORIES']}
         // onChange={handleChange}
         sx={{
           flex: 1,
           flexGrow: 2,
           borderTopRightRadius: '0px',
-          borderBottomRightRadius: '0px'
+          borderBottomRightRadius: '0px',
         }}
       >
         <MenuItem value={'one'}>Ten</MenuItem>
@@ -36,13 +42,13 @@ export default function Search({ languageSelected }) {
         sx={{
           flex: '1',
           flexGrow: 10,
-          [`& fieldset`]: {//removes border radius from mui textfield variant outlined
+          [`& fieldset`]: {
+            //removes border radius from mui textfield variant outlined
             borderRadius: 0,
           },
         }}
-        style={{
-
-        }}
+        onChange={(e) => setSearch(e.target.value)}
+        value={search}
       />
       <Button
         variant='outlined'
@@ -51,8 +57,9 @@ export default function Search({ languageSelected }) {
           flex: 1,
           flexGrow: 2,
           borderTopLeftRadius: '0px',
-          borderBottomLeftRadius: '0px'
+          borderBottomLeftRadius: '0px',
         }}
+        onClick={() => dispatchCatalog({ type: 'SEARCH_PRODUCTS', search })}
       >
         {languageSelected['SEARCH']}
       </Button>

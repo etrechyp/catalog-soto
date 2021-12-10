@@ -1,9 +1,24 @@
+import { forwardRef } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
+
 const tableIcons = {
-  Info: forwardRef((props, ref) => <InfoIcon {...props} ref={ref} />),
+  Info: forwardRef(function InfoIcon(props, ref) {
+    return <InfoIcon {...props} ref={ref} />;
+  }),
 };
 
-const props = (languageSelected) => ({
+const props = (
+  languageSelected,
+  data,
+  tableRef,
+  isLoading,
+  updateUser,
+  deleteUser,
+  handleOpen,
+  setSelectedUser
+) => ({
+  tableRef,
+  loading: isLoading,
   title: languageSelected['MANAGE_ACCOUNTS'],
   columns: [
     { title: 'ID', field: 'id', hidden: true, editable: 'never' },
@@ -47,9 +62,6 @@ const props = (languageSelected) => ({
     onRowUpdate: async (newData, oldData) => {
       delete newData.tableData;
 
-      console.log('new', newData);
-      console.log('old', oldData);
-
       await updateUser(newData.uid, newData);
     },
     onRowDelete: async (oldData) => {
@@ -92,3 +104,5 @@ const props = (languageSelected) => ({
     },
   ],
 });
+
+export default props;

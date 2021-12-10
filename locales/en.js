@@ -57,5 +57,8 @@ const english_locale = {
     'User registered, please wait 1 business day while we verify your information',
   DELETE_USER_MESSAGE: 'Are you sure you want to delete this user?',
   INFORMATION_ABOUT: (firtName, lastName) => `${firtName} ${lastName} Info`,
+  USER_NOT_VERIFIED:
+    'User not verified, please wait at least 1 business day before attempting to log in',
+  WRONG_CREDENTIALS: 'Wrong email or password',
 };
 export default english_locale;

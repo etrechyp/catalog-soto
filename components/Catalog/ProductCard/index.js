@@ -7,7 +7,17 @@ import {
   Grow,
 } from '@mui/material';
 
-export default function ProductCard({ product, openModal }) {
+export default function ProductCard({
+  product,
+  setSelectedProduct,
+  openModal,
+}) {
+  const { ImageUrl: productImage, eBayTopTitle } = product;
+  const handleClick = () => {
+    setSelectedProduct(product);
+    openModal();
+  };
+
   return (
     <Grow in>
       <Card
@@ -16,16 +26,23 @@ export default function ProductCard({ product, openModal }) {
           borderRadius: '15px',
         }}
       >
-        <CardActionArea onClick={openModal}>
+        <CardActionArea
+          sx={{ width: '100%', height: '100%' }}
+          onClick={handleClick}
+        >
           <CardMedia
             component='img'
             height='200'
-            image='https://cdn.shopify.com/s/files/1/0281/5665/7739/products/649f6865-9a6c-4a48-bf7c-6a1e44518f31_f84b45fd-ec39-408f-a022-ed33f92e2c5d_360x.jpg?v=1605806508'
-            alt='Dr sana'
+            image={productImage}
+            alt={eBayTopTitle}
           />
           <CardContent>
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
-              Dr sana
+            <Typography
+              variant='h6'
+              fontWeight='light'
+              sx={{ textAlign: 'center' }}
+            >
+              {eBayTopTitle}
             </Typography>
           </CardContent>
         </CardActionArea>

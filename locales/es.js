@@ -56,7 +56,11 @@ const spanish_locale = {
   USER_REGISTERED:
     'Usuario registrado, por favor, espere 1 dia hábil mientras verificamos su información',
   DELETE_USER_MESSAGE: 'Estás seguro de que deseas borrar este usuario?',
-  INFORMATION_ABOUT: (firtName, lastName) => `Informacion sobre ${firtName} ${lastName}`
+  INFORMATION_ABOUT: (firtName, lastName) =>
+    `Informacion sobre ${firtName} ${lastName}`,
+  USER_NOT_VERIFIED:
+    'Usuario no verificado, espere al menos 1 día hábil antes de iniciar sesión',
+  WRONG_CREDENTIALS: 'Correo electrónico o contraseña incorrectos',
 };
 
 export default spanish_locale;

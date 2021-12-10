@@ -1,36 +1,60 @@
-import {
-  Box,
-  Stack,
-  Pagination,
-  Skeleton
-} from '@mui/material';
-import useModal from '../../../hooks/useModal';
+import { Box, Stack, Pagination, Skeleton } from '@mui/material';
 import ProductCard from '../ProductCard';
 import styles from './styles';
-import props from './props';
 import ProductModal from '../ProductModal';
+import useProductsGrid from '../../../hooks/useProductsGrid';
 
 export default function Products() {
-  const { open, handleOpen, handleClose } = useModal();
-  const products = true;
+  const {
+    open,
+    handleOpen,
+    selectedProduct,
+    setSelectedProduct,
+    handleClose,
+    currentCatalog,
+    pages,
+    currentPage,
+    handlePaginationChange,
+    pageSize,
+  } = useProductsGrid();
 
   return (
     <>
       <Stack>
         <Box sx={styles.productsGrid}>
-          {products ? [...Array(10).keys()].map((product, index) => (
-            <ProductCard product={product} key={index} openModal={handleOpen} />
-          )) : [...Array(10).keys()].map((product, index) => (
-             <Skeleton variant="rectangular" key={index} sx={{width: '100%', height: '200px', borderRadius: '5px'}} /> 
-          ))}
+          {currentCatalog.length > 0
+            ? currentCatalog
+                .slice(pageSize * (currentPage - 1), pageSize * currentPage)
+                .map((product, index) => (
+                  <ProductCard
+                    product={product}
+                    key={index}
+                    setSelectedProduct={setSelectedProduct}
+                    openModal={handleOpen}
+                  />
+                ))
+            : [...Array(10).keys()].map((product, index) => (
+                <Skeleton
+                  variant='rectangular'
+                  key={index}
+                  sx={{ width: '100%', height: '200px', borderRadius: '5px' }}
+                />
+              ))}
         </Box>
         <Pagination
-          {...props.productsPagination(1, 10)}
+          count={pages}
+          page={currentPage}
           sx={styles.productsPagination}
-          // onChange={handleChange}
+          onChange={handlePaginationChange}
         />
       </Stack>
-      <ProductModal open={open} handleClose={handleClose} />
+      {selectedProduct && (
+        <ProductModal
+          open={open}
+          handleClose={handleClose}
+          product={selectedProduct}
+        />
+      )}
     </>
   );
 }

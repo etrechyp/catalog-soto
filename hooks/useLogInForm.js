@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/router';
 import useSnackbar from './useSnackbar';
 import { LanguageContext } from '../context/LanguageContext';
-import getSellercloudTokenData from '../helper';
+import { getSellercloudTokenData } from '../helper';
 
 const useLogInForm = () => {
   const [{ emailField, password }, handleChange] = useForm({
@@ -57,6 +57,18 @@ const useLogInForm = () => {
         tokenData: sellercloudTokenData,
       });
       router.push('/catalog');
+    } else if (responseData.msg === 'User not verified') {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        message: languageSelected['USER_NOT_VERIFIED'],
+      });
+    } else if (responseData.msg === 'Wrong email or password') {
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        message: languageSelected['WRONG_CREDENTIALS'],
+      });
     }
   };
 

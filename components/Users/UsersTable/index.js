@@ -1,13 +1,15 @@
 import { Box } from '@mui/material';
 import MaterialTable from '@material-table/core';
 import props from './props';
+import useUsersTable from '../../../hooks/useUsersTable';
 
 export default function UsersTable({
-  data,
-  isLoading,
-  tableRef,
   languageSelected,
+  handleOpen,
+  setSelectedUser,
 }) {
+  const { data, isLoading, tableRef, updateUser, deleteUser } = useUsersTable();
+
   return (
     <Box
       sx={{
@@ -20,7 +22,18 @@ export default function UsersTable({
         // bgcolor: 'lightblue'
       }}
     >
-      <MaterialTable tableRef={tableRef} {...props} />
+      <MaterialTable
+        {...props(
+          languageSelected,
+          data,
+          tableRef,
+          isLoading,
+          updateUser,
+          deleteUser,
+          handleOpen,
+          setSelectedUser
+        )}
+      />
     </Box>
   );
 }

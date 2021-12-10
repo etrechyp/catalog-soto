@@ -21,10 +21,13 @@ const authReducer = (state, action) => {
         firstName: action.user.firstName,
         lastName: action.user.lastName,
         isAdmin: action.user.isAdmin,
+        sellerCloudTokenData: null,
       };
     case 'LOGOUT':
       localStorage.removeItem('userData');
       localStorage.removeItem('token');
+      localStorage.removeItem('sellerCloudDataToken');
+
       return {
         loggedIn: false,
         email: '',
@@ -34,12 +37,14 @@ const authReducer = (state, action) => {
         sellerCloudTokenData: null,
       };
     case 'SELLERCLOUD_REQUEST_TOKEN':
+      const { access_token, expires, issued} = action;
+
       localStorage.setItem(
         'sellerCloudDataToken',
         JSON.stringify(action.tokenData)
       );
 
-      return { ...state, sellerCloudTokenData: action.tokenData };
+      return { ...state, sellerCloudTokenData: { access_token, expires, issued }};
     default:
       return state;
   }
@@ -56,8 +61,10 @@ const AuthContextProvider = ({ children }) => {
 
       if (!ISSERVER) {
         let storedSession = localStorage.getItem('userData');
+        let sellerCloudTokenData = localStorage.getItem('sellerCloudDataToken');
         if (storedSession) {
           storedSession = JSON.parse(storedSession);
+          sellerCloudTokenData = JSON.parse(sellerCloudTokenData)
 
           return {
             loggedIn: true,
@@ -65,6 +72,7 @@ const AuthContextProvider = ({ children }) => {
             firstName: storedSession.firstName,
             lastName: storedSession.lastName,
             isAdmin: storedSession.isAdmin,
+            sellerCloudTokenData,
           };
         }
 

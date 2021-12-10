@@ -24,6 +24,52 @@ const useUsersTable = () => {
     }
   };
 
+  const updateUser = async (uid, newData) => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    const body = JSON.stringify(newData);
+    const response = await fetch(`http://192.168.88.2:8082/api/users/${uid}`, {
+      method: 'PUT',
+      headers: {
+        token,
+        'Content-Type': 'application/json',
+      },
+      body,
+    });
+
+    const responseData = await response.json();
+
+    //debugger;
+    if (responseData.ok === 'true') {
+      const updatedData = data.map((user) => {
+        if (user.uid === uid) {
+          user = newData;
+        }
+
+        return user;
+      });
+      setData(updatedData);
+    } else setData(data);
+  };
+
+  const deleteUser = async (uid) => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    const response = await fetch(`http://192.168.88.2:8082/api/users/${uid}`, {
+      method: 'DELETE',
+      headers: {
+        token,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const responseData = await response.json();
+
+    //debugger;
+    if (responseData.ok === 'true') {
+      const filteredData = data.filter((user) => user.uid !== uid);
+      setData(filteredData);
+    } else setData(data);
+  };
+
   useEffect(() => {
     getAllUsers();
   }, []);
@@ -34,6 +80,8 @@ const useUsersTable = () => {
     data,
     isLoading,
     tableRef,
+    updateUser, 
+    deleteUser
   };
 };
 
