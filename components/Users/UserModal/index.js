@@ -17,8 +17,6 @@ export default function UserModal({
 }) {
   if (!selectedUser) return null;
 
-  console.log('AHHHH', selectedUser);
-
   return (
     <Modal
       open={open}

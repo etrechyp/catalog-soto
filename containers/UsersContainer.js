@@ -12,20 +12,18 @@ export default function UsersContainer() {
   const [selectedUser, setSelectedUser] = useState(null);
 
   return (
-    <AuthContextProvider>
-      <DashboardLayout>
-        <UsersTable
-          languageSelected={languageSelected}
-          handleOpen={handleOpen}
-          setSelectedUser={setSelectedUser}
-        />
-        <UserModal
-          open={open}
-          handleClose={handleClose}
-          selectedUser={selectedUser}
-          languageSelected={languageSelected}
-        />
-      </DashboardLayout>
-    </AuthContextProvider>
+    <DashboardLayout>
+      <UsersTable
+        languageSelected={languageSelected}
+        handleOpen={handleOpen}
+        setSelectedUser={setSelectedUser}
+      />
+      <UserModal
+        open={open}
+        handleClose={handleClose}
+        selectedUser={selectedUser}
+        languageSelected={languageSelected}
+      />
+    </DashboardLayout>
   );
 }

@@ -7,6 +7,7 @@ const authData = {
   lastName: '',
   isAdmin: false,
   sellerCloudTokenData: null,
+  businessStyle: '',
 };
 
 const authReducer = (state, action) => {
@@ -22,6 +23,7 @@ const authReducer = (state, action) => {
         lastName: action.user.lastName,
         isAdmin: action.user.isAdmin,
         sellerCloudTokenData: null,
+        businessStyle: action.user.businessStyle,
       };
     case 'LOGOUT':
       localStorage.removeItem('userData');
@@ -35,16 +37,20 @@ const authReducer = (state, action) => {
         lastName: '',
         isAdmin: false,
         sellerCloudTokenData: null,
+        businessStyle: '',
       };
     case 'SELLERCLOUD_REQUEST_TOKEN':
-      const { access_token, expires, issued} = action;
+      const { access_token, expires, issued } = action.tokenData;
 
       localStorage.setItem(
         'sellerCloudDataToken',
         JSON.stringify(action.tokenData)
       );
 
-      return { ...state, sellerCloudTokenData: { access_token, expires, issued }};
+      return {
+        ...state,
+        sellerCloudTokenData: { access_token, expires, issued },
+      };
     default:
       return state;
   }
@@ -64,7 +70,7 @@ const AuthContextProvider = ({ children }) => {
         let sellerCloudTokenData = localStorage.getItem('sellerCloudDataToken');
         if (storedSession) {
           storedSession = JSON.parse(storedSession);
-          sellerCloudTokenData = JSON.parse(sellerCloudTokenData)
+          sellerCloudTokenData = JSON.parse(sellerCloudTokenData);
 
           return {
             loggedIn: true,
@@ -73,6 +79,7 @@ const AuthContextProvider = ({ children }) => {
             lastName: storedSession.lastName,
             isAdmin: storedSession.isAdmin,
             sellerCloudTokenData,
+            businessStyle: storedSession.businessStyle,
           };
         }
 

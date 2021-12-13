@@ -3,20 +3,23 @@ import { Button, Typography, Grid, TextField } from '@mui/material';
 import { BsCartPlus } from 'react-icons/bs';
 import { MdPriceChange } from 'react-icons/md';
 import { LanguageContext } from '../../../context/LanguageContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { CartContext } from '../../../context/CartContext';
 import styles from './styles';
 
-export default function ProductDetails({
-  productTitle,
-  ShortDescription,
-  WholeSalePrice,
-}) {
+export default function ProductDetails({ product }) {
   const { languageSelected } = useContext(LanguageContext);
+  const { dispatchCart } = useContext(CartContext);
+  const { userData } = useContext(AuthContext);
   const [numberOfItemsSelected, setNumberOfItemsSelected] = useState(0);
+  const price =
+    userData.businessStyle === 'Wholesaler' ? product.WholeSalePrice : 0;
+
   return (
     <Grid item container md={5} direction='column' sx={styles.productDetails}>
       <Grid item xs={3} sx={styles.productTitle}>
         <Typography variant='h5' textAlign='center'>
-          {productTitle}
+          {product.eBayTopTitle}
         </Typography>
       </Grid>
       <Grid item container direction='column' sx={{ p: 1.5 }} spacing={2}>
@@ -26,13 +29,13 @@ export default function ProductDetails({
             textAlign='justify'
             sx={styles.productDescription}
           >
-            {ShortDescription}
+            {product.ShortDescription}
           </Typography>
         </Grid>
         <Grid item container direction='column' xs={2}>
           <Typography variant='h6'>
             <MdPriceChange />
-            {languageSelected['UNIT_PRICE']}: ${WholeSalePrice}
+            {languageSelected['UNIT_PRICE']}: ${price}
           </Typography>
         </Grid>
         <Grid item container direction='column' xs={2}>
@@ -45,6 +48,7 @@ export default function ProductDetails({
             }}
             inputProps={{
               min: 1,
+              max: product.AggregatePhysicalQty,
             }}
           />
         </Grid>
@@ -53,7 +57,7 @@ export default function ProductDetails({
             type='text'
             disabled
             placeholder='Total'
-            value={`$${numberOfItemsSelected * WholeSalePrice}`}
+            value={`$${numberOfItemsSelected * price}`}
           />
         </Grid>
         <Grid item direction='column'>
@@ -62,6 +66,18 @@ export default function ProductDetails({
             color='success'
             sx={{ width: '100%' }}
             endIcon={<BsCartPlus />}
+            onClick={() => {
+              dispatchCart({
+                type: 'ADD_PRODUCT',
+                product: {
+                  ID: product.ID,
+                  title: product.eBayTopTitle,
+                  price,
+                  mainImage: product.ImageUrl,
+                  numberOfItems: Number(numberOfItemsSelected),
+                },
+              });
+            }}
           >
             {languageSelected['ADD_TO_CART']}
           </Button>

@@ -24,7 +24,10 @@ const styles = {
       xs: 'row',
       md: 'column',
     },
-    justifyContent: 'space-between',
+    justifyContent: {
+      xs: 'center',
+      md: 'flex-start'
+    },
     maxHeight: '500px',
     width: '100%',
     order: {
@@ -33,8 +36,8 @@ const styles = {
     },
   },
   productImageThumbnail: {
-    flex: 1,
-    margin: '0.2rem 0rem',
+    flexBasis: '50px',
+    margin: '0.2rem 0.5rem',
     borderBottom: '1px solid gray',
     justifyContent: 'center',
     alignItems: 'center',

@@ -59,7 +59,7 @@ export default function Search({ languageSelected }) {
           borderTopLeftRadius: '0px',
           borderBottomLeftRadius: '0px',
         }}
-        onClick={() => dispatchCatalog({ type: 'SEARCH_PRODUCTS', search })}
+        onClick={() => dispatchCatalog({ type: 'APPLY_FILTERS', search })}
       >
         {languageSelected['SEARCH']}
       </Button>

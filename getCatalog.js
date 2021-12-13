@@ -21,7 +21,6 @@ var getAllProducts = async () => {
 
 
     var getCatalog = async (token, numberOfProducts) => {
-        console.log(numberOfProducts);
         var promises = [];
         var catalog = {
             products: [],
@@ -55,7 +54,5 @@ var getAllProducts = async () => {
     const numberOfProducts = await getTotalNumberOfProducts(token);
     const catalog = await getCatalog(token, numberOfProducts);
 
-    console.log(catalog);
-      
     return catalog;
 }

@@ -3,7 +3,6 @@ import Image from 'next/image';
 import styles from './styles';
 
 export default function ProductImagesSelector({ loading, images, setSelectedImage }) {
-  console.log(loading, images);
 
   return (
     <Grid item container md={1} sx={styles.productImagesWrapper}>

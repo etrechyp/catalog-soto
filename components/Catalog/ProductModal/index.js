@@ -13,10 +13,10 @@ export default function ProductModal({ open, handleClose, product }) {
     ImageUrl: defaultImage,
     WholeSalePrice,
   } = product;
-  const {
-    images,
-    changeSelectedImage
-  } = useProductImages(productId, defaultImage);
+  const { images, changeSelectedImage } = useProductImages(
+    productId,
+    defaultImage
+  );
 
   return (
     <Modal
@@ -44,12 +44,7 @@ export default function ProductModal({ open, handleClose, product }) {
             loading={images.loading}
             image={images.selectedImage}
           />
-          <ProductDetails
-            productTitle={eBayTopTitle}
-            ShortDescription={ShortDescription}
-            WholeSalePrice={WholeSalePrice}
-            loading={images.loading}
-          />
+          <ProductDetails product={product} />
         </Grid>
       </Box>
     </Modal>
