@@ -61,6 +61,10 @@ const spanish_locale = {
   USER_NOT_VERIFIED:
     'Usuario no verificado, espere al menos 1 día hábil antes de iniciar sesión',
   WRONG_CREDENTIALS: 'Correo electrónico o contraseña incorrectos',
+  ADDED_TO_CART: 'Producto agregado al carrito',
+  NUMBER_OF_ITEMS: 'Número de productos',
+  EXCEEDED_PRODUCT_LIMIT: (maxQty) => `Cantidad máxima de producto disponible excedida(${maxQty})`,
+  NO_PRODUCTS_IN_CART: 'No hay productos en el carrito',
 };
 
 export default spanish_locale;

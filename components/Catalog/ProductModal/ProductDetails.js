@@ -7,13 +7,23 @@ import { AuthContext } from '../../../context/AuthContext';
 import { CartContext } from '../../../context/CartContext';
 import styles from './styles';
 
-export default function ProductDetails({ product }) {
+export default function ProductDetails({ product, setSnackbar }) {
   const { languageSelected } = useContext(LanguageContext);
-  const { dispatchCart } = useContext(CartContext);
+  const { cartData, dispatchCart } = useContext(CartContext);
   const { userData } = useContext(AuthContext);
   const [numberOfItemsSelected, setNumberOfItemsSelected] = useState(0);
   const price =
     userData.businessStyle === 'Wholesaler' ? product.WholeSalePrice : 0;
+
+  const itemInCart = cartData.items.find(
+    (cartProduct) => cartProduct.ID === product.ID
+  );
+
+  const itemsAvailable = itemInCart
+    ? product.AggregatePhysicalQty - itemInCart.numberOfItems
+    : product.AggregatePhysicalQty;
+
+  console.log('Item in cart', itemInCart);
 
   return (
     <Grid item container md={5} direction='column' sx={styles.productDetails}>
@@ -41,10 +51,20 @@ export default function ProductDetails({ product }) {
         <Grid item container direction='column' xs={2}>
           <TextField
             type='number'
-            placeholder='Nro de unidades'
+            placeholder={languageSelected['NUMBER_OF_ITEMS']}
             value={numberOfItemsSelected}
             onChange={(e) => {
-              setNumberOfItemsSelected(e.target.value);
+              console.log(e.target.value, itemsAvailable)
+              if (e.target.value <= itemsAvailable) {
+                setNumberOfItemsSelected(e.target.value);
+              } else {
+                setSnackbar({
+                  open: true,
+                  severity: 'error',
+                  message:
+                    languageSelected['EXCEEDED_PRODUCT_LIMIT'](itemsAvailable),
+                });
+              }
             }}
             inputProps={{
               min: 1,
@@ -57,7 +77,7 @@ export default function ProductDetails({ product }) {
             type='text'
             disabled
             placeholder='Total'
-            value={`$${numberOfItemsSelected * price}`}
+            value={`$${(numberOfItemsSelected * price).toFixed(2)}`}
           />
         </Grid>
         <Grid item direction='column'>
@@ -67,16 +87,31 @@ export default function ProductDetails({ product }) {
             sx={{ width: '100%' }}
             endIcon={<BsCartPlus />}
             onClick={() => {
-              dispatchCart({
-                type: 'ADD_PRODUCT',
-                product: {
-                  ID: product.ID,
-                  title: product.eBayTopTitle,
-                  price,
-                  mainImage: product.ImageUrl,
-                  numberOfItems: Number(numberOfItemsSelected),
-                },
-              });
+              if (numberOfItemsSelected <= itemsAvailable) {
+                dispatchCart({
+                  type: 'ADD_PRODUCT',
+                  product: {
+                    ID: product.ID,
+                    title: product.eBayTopTitle,
+                    price,
+                    mainImage: product.ImageUrl,
+                    numberOfItems: Number(numberOfItemsSelected),
+                    maxItems: product['AggregatePhysicalQty'],
+                  },
+                });
+                setSnackbar({
+                  open: true,
+                  severity: 'success',
+                  message: languageSelected['ADDED_TO_CART'],
+                });
+              } else {
+                setSnackbar({
+                  open: true,
+                  severity: 'error',
+                  message:
+                    languageSelected['EXCEEDED_PRODUCT_LIMIT'](itemsAvailable),
+                });
+              }
             }}
           >
             {languageSelected['ADD_TO_CART']}

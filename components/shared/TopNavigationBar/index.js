@@ -1,5 +1,6 @@
-import * as React from 'react';
+import { useContext} from 'react';
 import { AppBar, Toolbar, Box, Badge, IconButton } from '@mui/material';
+import { CartContext } from "../../../context/CartContext";
 import { IoMenuOutline } from 'react-icons/io5';
 import { IoCart } from 'react-icons/io5';
 import SelectLanguage from "../SelectLanguage";
@@ -7,6 +8,7 @@ import Link from 'next/link';
 import styles from './styles';
 
 export default function TopNavigationBar({ setSidebarOpen }) {
+  const { cartData } = useContext(CartContext);
   const openSidebar = () => setSidebarOpen(true);
 
   return (
@@ -16,7 +18,7 @@ export default function TopNavigationBar({ setSidebarOpen }) {
           <SelectLanguage />
           <Link href='/cart' passHref>
             <a>
-              <Badge badgeContent={10} color='primary' sx={styles.badge}>
+              <Badge badgeContent={cartData.items.length} color='primary' sx={styles.badge}>
                 <IoCart />
               </Badge>
             </a>

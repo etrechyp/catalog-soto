@@ -9,33 +9,38 @@ const cartReducer = (state, action) => {
       const productPrice = action.product.price;
       const numberOfItems = action.product.numberOfItems;
 
-      const productIndex = cartItems.findIndex(product => product.ID === action.product.ID);
+      const productIndex = cartItems.findIndex(
+        (product) => product.ID === action.product.ID
+      );
 
-      alert(productIndex)
-
-      if(productIndex === -1) cartItems.push(action.product);
+      if (productIndex === -1) cartItems.push(action.product);
       else {
         cartItems[productIndex].numberOfItems += action.product.numberOfItems;
       }
 
       return {
         items: cartItems,
-        total: state.total + (productPrice * numberOfItems),
+        total: state.total + productPrice * numberOfItems,
       };
     }
     case 'DELETE_PRODUCT': {
       const cartItems = state.items.filter(
-        (product) => product.ID !== action.productIdToRemove
+        (product) => product.ID !== action.product.ID
       );
-      const productPrice = action.product.price;
 
-      cartItems.push(action.product);
+      action.updatePaginationData(cartItems);
+      const productPrice = action.product.price;
+      const numberOfItemsInCart = action.product.numberOfItems;
+      const totalAmount = productPrice * numberOfItemsInCart;
+
       return {
         items: cartItems,
-        total: state.total - productPrice,
+        total: state.total - totalAmount,
       };
     }
     case 'DELETE_ALL': {
+      action.updatePaginationData([]);
+
       return {
         items: [],
         total: 0,
@@ -43,37 +48,46 @@ const cartReducer = (state, action) => {
     }
     case 'INC_PRODUCT_QUANTITY': {
       const cartItems = [...state.items];
+      let total = state.total;
 
       cartItems.forEach((item) => {
-        if (item.ID === action.targetProduct) {
-          item.quantity += 1;
+        if (
+          item.ID === action.product.ID &&
+          item.numberOfItems < item.maxItems
+        ) {
+          item.numberOfItems += 1;
+          total += item.price;
         }
       });
 
       return {
-        ...state,
         items: cartItems,
+        total,
       };
     }
     case 'DEC_PRODUCT_QUANTITY': {
       const cartItems = [...state.items];
+      let total = state.total;
 
       cartItems.forEach((item) => {
-        if (item.ID === action.targetProduct) {
-          item.quantity -= 1;
+        if (item.ID === action.product.ID) {
+          if (item.numberOfItems > 1) {
+            item.numberOfItems -= 1;
+            total -= item.price;
+          }
         }
       });
 
       return {
-        ...state,
         items: cartItems,
+        total,
       };
     }
   }
 };
 
 const CartContextProvider = ({ children }) => {
-  const [ cartData, dispatchCart ] = useReducer(cartReducer, {
+  const [cartData, dispatchCart] = useReducer(cartReducer, {
     items: [],
     total: 0,
   });

@@ -1,13 +1,22 @@
 import { useContext } from 'react';
 import DashboardLayout from '../layouts/dashboard';
-import AuthContextProvider from '../context/AuthContext';
-import CartContextProvider from '../context/CartContext';
-import { Box, Grid, IconButton, Pagination, Tooltip } from '@mui/material';
-import CartItems from '../components/Cart/CartItems';
+import { CartContext } from '../context/CartContext';
+import { CatalogContext } from '../context/CatalogContext';
+import usePagination from '../hooks/usePagination';
+import CartItem from '../components/Cart/CartItem';
+import Link from 'next/link';
+import {
+  Box,
+  Grid,
+  IconButton,
+  Pagination,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { FiDownload, FiTrash } from 'react-icons/fi';
 import { LanguageContext } from '../context/LanguageContext';
 
-const TotalPriceBox = ({ languageSelected }) => (
+const TotalPriceBox = ({ languageSelected, totalCost }) => (
   <Grid
     container
     justifyContent='center'
@@ -22,12 +31,39 @@ const TotalPriceBox = ({ languageSelected }) => (
       height: '3rem',
     }}
   >
-    {languageSelected['TOTAL_CART']}: $20000
+    {languageSelected['TOTAL_CART']}: {totalCost}
   </Grid>
 );
 
 export default function CartContainer() {
   const { languageSelected } = useContext(LanguageContext);
+  const { cartData, dispatchCart } = useContext(CartContext);
+  const { catalogState } = useContext(CatalogContext);
+  const { pagination, pageSize, handlePaginationChange, updatePaginationData } =
+    usePagination(cartData.items);
+  const { pages, currentPage } = pagination;
+
+  const downloadCartData = async () => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    const requestBody = {
+      lastUpdated: catalogState.lastUpdated,
+      products: cartData.items,
+      total: cartData.total,
+    };
+
+    let response = await fetch('http://192.168.88.2:8082/api/report', {
+      method: 'POST',
+      headers: {
+        token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    let {filename} = await response.json();
+
+    await fetch(`http://192.168.88.2:8082/api/report/${filename}`);
+  };
 
   return (
     <DashboardLayout>
@@ -60,11 +96,19 @@ export default function CartContainer() {
             md={2}
           >
             <Tooltip title={languageSelected['DOWNLOAD_CART_DATA']}>
-              <IconButton>
+              <IconButton onClick={downloadCartData}>
                 <FiDownload style={{ color: 'green' }} />
               </IconButton>
             </Tooltip>
-            <Tooltip title={languageSelected['DELETE_ALL_FROM_CART']}>
+            <Tooltip
+              title={languageSelected['DELETE_ALL_FROM_CART']}
+              onClick={() => {
+                dispatchCart({
+                  type: 'DELETE_ALL',
+                  updatePaginationData,
+                });
+              }}
+            >
               <IconButton>
                 <FiTrash style={{ color: 'red' }} />
               </IconButton>
@@ -78,12 +122,40 @@ export default function CartContainer() {
             justifyContent='center'
             alignItems='center'
           >
-            <Pagination count={5} variant='outlined' />
+            <Pagination
+              count={pages}
+              page={currentPage}
+              onChange={handlePaginationChange}
+              variant='outlined'
+            />
           </Grid>
         </Grid>
-        <CartItems />
+        {cartData.items.length > 0 ? (
+          cartData.items
+            .slice(pageSize * (currentPage - 1), pageSize * currentPage)
+            .map((cartItem) => {
+              return (
+                <CartItem
+                  product={cartItem}
+                  key={cartItem.ID}
+                  dispatchCart={dispatchCart}
+                  updatePaginationData={updatePaginationData}
+                />
+              );
+            })
+        ) : (
+          <Typography
+            variant='body1'
+            sx={{ width: '100%', textAlign: 'center' }}
+          >
+            {languageSelected['NO_PRODUCTS_IN_CART']}
+          </Typography>
+        )}
       </Box>
-      <TotalPriceBox languageSelected={languageSelected} />
+      <TotalPriceBox
+        languageSelected={languageSelected}
+        totalCost={`$${cartData.total.toFixed(2)}`}
+      />
     </DashboardLayout>
   );
 }

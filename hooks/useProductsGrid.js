@@ -14,11 +14,12 @@ const useProductsGrid = () => {
   const { pages, currentPage } = pagination;
 
   const initCatalog = async () => {
-    const catalog = await getAllProducts();
+    const catalogData = await getAllProducts();
 
     dispatchCatalog({
       type: 'INIT_CATALOG',
-      catalog,
+      catalog: catalogData.catalog,
+      lastUpdated: catalogData.lastUpdated,
     });
   };
 

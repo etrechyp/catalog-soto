@@ -28,7 +28,7 @@ const styles = {
       xs: 'center',
       md: 'flex-start'
     },
-    maxHeight: '500px',
+    height: '100%',
     width: '100%',
     order: {
       xs: 0,

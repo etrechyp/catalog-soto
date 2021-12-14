@@ -22,7 +22,7 @@ const getAllProducts = async () => {
   const response = await fetch('http://192.168.88.2:8082/api/products/catalog');
   const data = await response.json();
 
-  return data.catalog;
+  return data;
 };
 
 export { getSellercloudTokenData, getAllProducts };

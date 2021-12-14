@@ -5,6 +5,7 @@ export const CatalogContext = createContext();
 const initialCatalog = {
   global: [],
   current: [],
+  lastUpdated: "",
   filters: {
     search: '',
     category: '',
@@ -49,11 +50,12 @@ const removeFilters = (products, filters, filterToRemove) => {
 const catalogReducer = (state, action) => {
   switch (action.type) {
     case 'INIT_CATALOG':
-      const { catalog } = action;
+      const { catalog, lastUpdated } = action;
 
       return {
         global: catalog,
         current: catalog,
+        lastUpdated,
         filters: {
           search: '',
           category: '',

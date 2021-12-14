@@ -2,7 +2,11 @@ import { Paper, Grid, Typography, IconButton } from '@mui/material';
 import { FiPlusCircle, FiMinusCircle, FiTrash } from 'react-icons/fi';
 import Image from 'next/image';
 
-export default function CartItem({ product }) {
+export default function CartItem({
+  product,
+  dispatchCart,
+  updatePaginationData,
+}) {
   return (
     <Paper
       sx={{
@@ -22,7 +26,7 @@ export default function CartItem({ product }) {
           }}
         >
           <Image
-            src='/images/drsana.jpg'
+            src={product.mainImage}
             alt='product #1'
             height='100%'
             width='100%'
@@ -42,10 +46,10 @@ export default function CartItem({ product }) {
           <Typography
             variant='h4'
             sx={{
-              fontSize: 'clamp(1rem, 10vw, 2rem)',
+              fontSize: 'clamp(1rem, 10vw, 1.5rem)',
             }}
           >
-            Dr. Sana
+            {product.title}
           </Typography>
           <Paper
             variant='outlined'
@@ -67,7 +71,7 @@ export default function CartItem({ product }) {
                 fontSize: 'clamp(0.5rem, 5vw, 1rem)',
               }}
             >
-              $20
+              ${product.price}
             </Typography>
           </Paper>
         </Grid>
@@ -86,7 +90,11 @@ export default function CartItem({ product }) {
             flexWrap: 'nowrap',
           }}
         >
-          <IconButton>
+          <IconButton
+            onClick={() =>
+              dispatchCart({ type: 'DEC_PRODUCT_QUANTITY', product })
+            }
+          >
             <FiMinusCircle />
           </IconButton>
           <Typography
@@ -95,9 +103,13 @@ export default function CartItem({ product }) {
               fontSize: 'clamp(0.7rem, 7vw, 1.5rem)',
             }}
           >
-            20
+            {product.numberOfItems}
           </Typography>
-          <IconButton>
+          <IconButton
+            onClick={() =>
+              dispatchCart({ type: 'INC_PRODUCT_QUANTITY', product })
+            }
+          >
             <FiPlusCircle />
           </IconButton>
         </Grid>
@@ -109,10 +121,7 @@ export default function CartItem({ product }) {
           sm={6}
           md={2}
           sx={{
-            justifyContent: {
-              xs: 'center',
-              sm: 'space-between',
-            },
+            justifyContent: 'center',
             alignItems: 'center',
           }}
         >
@@ -131,7 +140,7 @@ export default function CartItem({ product }) {
               fontSize: 'clamp(0.7rem, 7vw, 1.5rem)',
             }}
           >
-            $400
+            ${(product.price * product.numberOfItems).toFixed(2)}
           </Typography>
         </Grid>
         <Grid
@@ -146,7 +155,15 @@ export default function CartItem({ product }) {
             flexDirection: 'column',
           }}
         >
-          <IconButton>
+          <IconButton
+            onClick={() =>
+              dispatchCart({
+                type: 'DELETE_PRODUCT',
+                product,
+                updatePaginationData,
+              })
+            }
+          >
             <FiTrash
               style={{
                 color: 'red',

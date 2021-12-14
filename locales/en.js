@@ -60,5 +60,10 @@ const english_locale = {
   USER_NOT_VERIFIED:
     'User not verified, please wait at least 1 business day before attempting to log in',
   WRONG_CREDENTIALS: 'Wrong email or password',
+  ADDED_TO_CART: 'Product added to cart',
+  NUMBER_OF_ITEMS: 'Number of products',
+  EXCEEDED_PRODUCT_LIMIT: (maxQty) =>
+    `Exceeded max product quantity available(${maxQty})`,
+  NO_PRODUCTS_IN_CART: 'No products in cart',
 };
 export default english_locale;
