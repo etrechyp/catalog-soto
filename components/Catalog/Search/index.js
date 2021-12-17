@@ -10,8 +10,15 @@ import {
 import { FaSearch } from 'react-icons/fa';
 import { CatalogContext } from '../../../context/CatalogContext';
 
+const categoriesSelectData = [
+  {
+    id: '',
+    name: '',
+  }
+]
+
 export default function Search({ languageSelected }) {
-  const { dispatchCatalog } = useContext(CatalogContext);
+  const { catalogState, dispatchCatalog } = useContext(CatalogContext);
   const [search, setSearch] = useState('');
 
   return (
@@ -59,7 +66,7 @@ export default function Search({ languageSelected }) {
           borderTopLeftRadius: '0px',
           borderBottomLeftRadius: '0px',
         }}
-        onClick={() => dispatchCatalog({ type: 'APPLY_FILTERS', search })}
+        onClick={() => dispatchCatalog({ type: 'APPLY_FILTERS', search, brand: catalogState.filters.brand })}
       >
         {languageSelected['SEARCH']}
       </Button>

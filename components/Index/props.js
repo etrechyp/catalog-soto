@@ -8,7 +8,6 @@ const props = {
     required: true,
     variant: 'standard',
     name: 'emailField',
-    label: 'example@domain',
     type: 'email',
     value: emailField,
     onChange: handleChange,

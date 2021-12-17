@@ -14,7 +14,7 @@ const useProductsGrid = () => {
   const { pages, currentPage } = pagination;
 
   const initCatalog = async () => {
-    const catalogData = await getAllProducts();
+    const catalogData = await getAllProducts(); 
 
     dispatchCatalog({
       type: 'INIT_CATALOG',

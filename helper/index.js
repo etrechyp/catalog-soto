@@ -18,6 +18,31 @@ const getSellercloudTokenData = async (token) => {
   }
 };
 
+const refreshToken = async () => {
+  try {
+    const body = { user: JSON.parse(localStorage.getItem('userData')) };
+
+    console.log(console.log(body));
+
+    const response = await fetch('http://192.168.88.2:8082/api/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    localStorage.setItem('token', JSON.stringify(data.token));
+
+    return data.token;
+  } catch (err) {
+      console.log('ERROR' + JSON.stringify(err.message, null, 4));
+    return err;
+  }
+};
+
 const getAllProducts = async () => {
   const response = await fetch('http://192.168.88.2:8082/api/products/catalog');
   const data = await response.json();
@@ -25,4 +50,4 @@ const getAllProducts = async () => {
   return data;
 };
 
-export { getSellercloudTokenData, getAllProducts };
+export { getSellercloudTokenData, getAllProducts, refreshToken };

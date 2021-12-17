@@ -5,7 +5,7 @@ export const CatalogContext = createContext();
 const initialCatalog = {
   global: [],
   current: [],
-  lastUpdated: "",
+  lastUpdated: '',
   filters: {
     search: '',
     category: '',
@@ -14,24 +14,29 @@ const initialCatalog = {
 };
 
 const applyFilters = (products, search = '', brand = '', category = '') => {
-  const filteredProducts = products.filter((product) => {
+  let filteredProducts = products.filter((product) => {
     let filteredBySearch = false;
-    if (search !== '') {
+    if (search !== '' && product.eBayTopTitle) {
       filteredBySearch = product.eBayTopTitle
         .toLowerCase()
         .includes(search.toLowerCase());
     }
 
-    const filtersApplied = (filteredBySearch || search === "");
-
-    return filtersApplied;
+    return filteredBySearch || search === '';
   });
+
+  if (brand !== '') {
+    console.log('BEFORE FILTER', filteredProducts.length);
+    filteredProducts = filteredProducts.filter((product) => {
+      return product.BrandID === brand;
+    });
+  }
 
   return filteredProducts;
 };
 
 const removeFilters = (products, filters, filterToRemove) => {
-    const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     let filteredBySearch = true;
     if (filters.search !== '' && filterToRemove !== 'search') {
       filteredBySearch = product.eBayTopTitle
@@ -39,7 +44,7 @@ const removeFilters = (products, filters, filterToRemove) => {
         .includes(search.toLowerCase());
     }
 
-    const filtersApplied = (filteredBySearch || filters.search !== "");
+    const filtersApplied = filteredBySearch || filters.search !== '';
 
     return filtersApplied;
   });
@@ -50,7 +55,20 @@ const removeFilters = (products, filters, filterToRemove) => {
 const catalogReducer = (state, action) => {
   switch (action.type) {
     case 'INIT_CATALOG':
-      const { catalog, lastUpdated } = action;
+      let { catalog, lastUpdated } = action;
+
+      //Sorts products alphabetically
+      catalog.sort((firstProduct, secondProduct) => {
+        if (firstProduct.eBayTopTitle < secondProduct.eBayTopTitle) return -1;
+        else if (firstProduct.eBayTopTitle < secondProduct.eBayTopTitle) return 1;
+
+        return 0;
+      });
+
+      //TODO - esta linea filtra el catalogo para que solo muestre los productos
+      //donde (on order + physicalQty) sean  > 0
+      catalog = catalog.filter(product => (product.PhysicalQty + product.OnOrder) > 0)
+      
 
       return {
         global: catalog,
@@ -63,9 +81,9 @@ const catalogReducer = (state, action) => {
         },
       };
     case 'APPLY_FILTERS': {
-      const { search } = action;
+      const { search, brand } = action;
 
-      const filteredProducts = applyFilters(state.global, search);
+      const filteredProducts = applyFilters(state.global, search, brand);
 
       return {
         ...state,
@@ -73,13 +91,18 @@ const catalogReducer = (state, action) => {
         filters: {
           ...state.filters,
           search,
+          brand,
         },
       };
     }
     case 'REMOVE_FILTERS': {
       const { filter, filtersApplied } = action;
 
-      const filteredProducts = removeFilters(state.global, filtersApplied, filter);
+      const filteredProducts = removeFilters(
+        state.global,
+        filtersApplied,
+        filter
+      );
 
       return {
         ...state,

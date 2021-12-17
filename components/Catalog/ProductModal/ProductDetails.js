@@ -12,16 +12,28 @@ export default function ProductDetails({ product, setSnackbar }) {
   const { cartData, dispatchCart } = useContext(CartContext);
   const { userData } = useContext(AuthContext);
   const [numberOfItemsSelected, setNumberOfItemsSelected] = useState(0);
-  const price =
-    userData.businessStyle === 'Wholesaler' ? product.WholeSalePrice : 0;
+  let price;
+
+  //Todo - Cuando el localStorePrice este disponible cambiar la linea 15 por la de abajo
+  switch (userData.businessStyle) {
+    case 'Wholesaler':
+      price = product.WholeSalePrice;
+      break;
+    case 'Store':
+      price = product.SitePrice;
+      break;
+    default:
+      price = 9999;
+  }
 
   const itemInCart = cartData.items.find(
     (cartProduct) => cartProduct.ID === product.ID
   );
 
-  const itemsAvailable = itemInCart
-    ? product.AggregatePhysicalQty - itemInCart.numberOfItems
-    : product.AggregatePhysicalQty;
+  //PORSIACASO
+  // const itemsAvailable = itemInCart
+  //   ? product.AggregatePhysicalQty - itemInCart.numberOfItems
+  //   : product.AggregatePhysicalQty;
 
   console.log('Item in cart', itemInCart);
 
@@ -45,7 +57,9 @@ export default function ProductDetails({ product, setSnackbar }) {
         <Grid item container direction='column' xs={2}>
           <Typography variant='h6'>
             <MdPriceChange />
-            {languageSelected['UNIT_PRICE']}: ${price}
+            {userData.businessStyle === 'Wholesaler'
+              ? `${languageSelected['WHOLESALER_PRICE']}: $${price}`
+              : `${languageSelected['UNIT_PRICE']}: $${price}`}
           </Typography>
         </Grid>
         <Grid item container direction='column' xs={2}>
@@ -53,22 +67,9 @@ export default function ProductDetails({ product, setSnackbar }) {
             type='number'
             placeholder={languageSelected['NUMBER_OF_ITEMS']}
             value={numberOfItemsSelected}
-            onChange={(e) => {
-              console.log(e.target.value, itemsAvailable)
-              if (e.target.value <= itemsAvailable) {
-                setNumberOfItemsSelected(e.target.value);
-              } else {
-                setSnackbar({
-                  open: true,
-                  severity: 'error',
-                  message:
-                    languageSelected['EXCEEDED_PRODUCT_LIMIT'](itemsAvailable),
-                });
-              }
-            }}
+            onChange={(e) => setNumberOfItemsSelected(e.target.value)}
             inputProps={{
               min: 1,
-              max: product.AggregatePhysicalQty,
             }}
           />
         </Grid>
@@ -77,7 +78,11 @@ export default function ProductDetails({ product, setSnackbar }) {
             type='text'
             disabled
             placeholder='Total'
-            value={`$${(numberOfItemsSelected * price).toFixed(2)}`}
+            value={`${
+              numberOfItemsSelected >= 0
+                ? '$' + (numberOfItemsSelected * price).toFixed(2)
+                : languageSelected['INVALID_QUANTITY']
+            }`}
           />
         </Grid>
         <Grid item direction='column'>
@@ -87,7 +92,10 @@ export default function ProductDetails({ product, setSnackbar }) {
             sx={{ width: '100%' }}
             endIcon={<BsCartPlus />}
             onClick={() => {
-              if (numberOfItemsSelected <= itemsAvailable) {
+              if (
+                numberOfItemsSelected > 0 &&
+                typeof Number(numberOfItemsSelected) === 'number'
+              ) {
                 dispatchCart({
                   type: 'ADD_PRODUCT',
                   product: {
@@ -96,7 +104,6 @@ export default function ProductDetails({ product, setSnackbar }) {
                     price,
                     mainImage: product.ImageUrl,
                     numberOfItems: Number(numberOfItemsSelected),
-                    maxItems: product['AggregatePhysicalQty'],
                   },
                 });
                 setSnackbar({
@@ -108,8 +115,7 @@ export default function ProductDetails({ product, setSnackbar }) {
                 setSnackbar({
                   open: true,
                   severity: 'error',
-                  message:
-                    languageSelected['EXCEEDED_PRODUCT_LIMIT'](itemsAvailable),
+                  message: languageSelected['INVALID_QUANTITY'],
                 });
               }
             }}

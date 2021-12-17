@@ -52,8 +52,7 @@ const cartReducer = (state, action) => {
 
       cartItems.forEach((item) => {
         if (
-          item.ID === action.product.ID &&
-          item.numberOfItems < item.maxItems
+          item.ID === action.product.ID
         ) {
           item.numberOfItems += 1;
           total += item.price;

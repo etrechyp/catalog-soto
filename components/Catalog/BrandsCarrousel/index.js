@@ -1,111 +1,75 @@
+import { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import { Box, Paper, Skeleton, Typography } from '@mui/material';
 import Carousel from 'react-elastic-carousel';
+import { CatalogContext } from '../../../context/CatalogContext';
 
-export default function BrandsCarrousel({languageSelected}) {
-  const brands = true;
-  const breakPoints = [
-    { width: 1, itemsToShow: 1 },
-    { width: 601, itemsToShow: 2 },
-    { width: 901, itemsToShow: 3 },
-    { width: 1201, itemsToShow: 4, itemsToScroll: 2 },
-    { width: 1537, itemsToShow: 5 },
-  ];
-  const items = [
-    {
-      brand: 'KRIP',
-      logo: '/logos/KRIP.png',
-      brandId: 1,
-    },
-    {
-      brand: 'Valmy',
-      logo: '/logos/logo-valmy.png',
-      brandId: 2,
-    },
-    {
-      brand: 'Avon',
-      logo: '/logos/avon-logo.png',
-      brandId: 3,
-    },
-    {
-      brand: 'Aromar',
-      logo: '/logos/aromar-logo.png',
-      brandId: 4,
-    },
-    {
-      brand: 'DOVE',
-      logo: '/logos/DOVE.png',
-      brandId: 5,
-    },
-  ];
+const breakPoints = [
+  { width: 1, itemsToShow: 1 },
+  { width: 601, itemsToShow: 2 },
+  { width: 901, itemsToShow: 3 },
+  { width: 1201, itemsToShow: 4, itemsToScroll: 2 },
+  { width: 1537, itemsToShow: 5 },
+];
 
-  const colors = [
-    '#ADD8E6',
-    '#FFB6C1',
-    '#20B2AA',
-    '#87CEFA',
-    '#B0C4DE',
-    '#e91e63',
-    '#8bc34a',
-    '#3f51b5',
-    '#1de9b6',
-  ];
+export default function BrandsCarrousel({ languageSelected }) {
+  const { catalogState, dispatchCatalog } = useContext(CatalogContext);
+  const [brands, setBrands] = useState({
+    loading: true,
+    items: [],
+  });
 
-  const lightenDarkenColor = (col, amt) => {
-    var usePound = false;
+  const getAllBrands = async () => {
+    try {
+      const response = await fetch(
+        'http://192.168.88.2:8082/api/products/brands'
+      );
+      const data = await response.json();
 
-    if (col[0] == '#') {
-      col = col.slice(1);
-      usePound = true;
+      setBrands({
+        loading: false,
+        items: data,
+      });
+    } catch (err) {
+      return err;
     }
-
-    var num = parseInt(col, 16);
-
-    var r = (num >> 16) + amt;
-
-    if (r > 255) r = 255;
-    else if (r < 0) r = 0;
-
-    var b = ((num >> 8) & 0x00ff) + amt;
-
-    if (b > 255) b = 255;
-    else if (b < 0) b = 0;
-
-    var g = (num & 0x0000ff) + amt;
-
-    if (g > 255) g = 255;
-    else if (g < 0) g = 0;
-
-    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
   };
 
-  const randomIntFromInterval = (min, max) => {
-    // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
+  useEffect(() => {
+    getAllBrands();
+  }, []);
 
-  const Carrouseltems = brands
-    ? items.map((item) => {
-        const cardColor = colors[randomIntFromInterval(0, colors.length - 1)];
-
+  const Carrouseltems = !brands.loading
+    ? brands.items.map((item) => {
         return (
           <Paper
             key={item.brandId}
+            variant='outlined'
+            onClick={() =>
+              dispatchCatalog({
+                type: 'APPLY_FILTERS',
+                search: catalogState.filters.search,
+                brand: item.Key,
+              })
+            }
             sx={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               position: 'relative',
-              bgcolor: cardColor,
-              padding: '2rem',
               flexBasis: '90%',
               ':hover': {
                 cursor: 'pointer',
-                bgcolor: lightenDarkenColor(cardColor, -20),
+                bgcolor: '#fff',
               },
             }}
           >
-            <Image height={150} width={300} src={item.logo} alt='brand' />
+            <Image
+              height='150px'
+              width='300px'
+              src={`http://192.168.88.2:8082/images/brands/${item.Key}.png`}
+              alt='brand'
+            />
           </Paper>
         );
       })
@@ -125,10 +89,15 @@ export default function BrandsCarrousel({languageSelected}) {
         alignItems: 'center',
       }}
     >
-      <Typography variant="h4" sx={{
-        margin: "2rem",
-        textTransform: 'uppercase'
-      }}>{languageSelected["SEARCH_PRODUCT_BY_BRAND"]}</Typography>
+      <Typography
+        variant='h4'
+        sx={{
+          margin: '2rem',
+          textTransform: 'uppercase',
+        }}
+      >
+        {languageSelected['SEARCH_PRODUCT_BY_BRAND']}
+      </Typography>
 
       <Box
         sx={{

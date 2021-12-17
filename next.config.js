@@ -5,6 +5,6 @@ module.exports = {
     defaultLocale: 'en-US',
   },
   images: {
-    domains: ['cf.cwa.sellercloud.com'],
+    domains: ['cf.cwa.sellercloud.com', '192.168.88.2'],
   },
 };

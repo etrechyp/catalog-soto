@@ -25,11 +25,15 @@ const useSignUpForm = () => {
     steps: ['PERSONAL_INFO', 'COMPANY_OCCUPATION'],
     currentStep: 0,
   });
+
+  //Todo Cambiar tipos de organizacion
   const organizationTypes = [
     languageSelected['PRIVATE_CORPORATION'],
     languageSelected['PUBLIC_CORPORATION'],
+    'LLC'
   ];
 
+  //Todo Revisar tipos de negocio
   const businessStyles = [
     'Wholesaler',
     'Store',

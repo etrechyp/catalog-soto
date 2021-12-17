@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef, useEffect, useState } from 'react';
 import DashboardLayout from '../layouts/dashboard';
 import { CartContext } from '../context/CartContext';
 import { CatalogContext } from '../context/CatalogContext';
@@ -42,6 +42,11 @@ export default function CartContainer() {
   const { pagination, pageSize, handlePaginationChange, updatePaginationData } =
     usePagination(cartData.items);
   const { pages, currentPage } = pagination;
+  const linkRef = useRef(null);
+  const [downloadLink, setDownloadLink] = useState({
+    active: false,
+    url: '',
+  });
 
   const downloadCartData = async () => {
     const token = JSON.parse(localStorage.getItem('token'));
@@ -60,10 +65,23 @@ export default function CartContainer() {
       body: JSON.stringify(requestBody),
     });
 
-    let {filename} = await response.json();
+    let { filename } = await response.json();
 
-    await fetch(`http://192.168.88.2:8082/api/report/${filename}`);
+    setDownloadLink(() => ({
+      active: true,
+      url: `http://192.168.88.2:8082/api/report/${filename}`,
+    }));
   };
+
+  useEffect(() => {
+    if (downloadLink.active) {
+      linkRef.current.click();
+      setDownloadLink({
+        active: false,
+        url: '',
+      });
+    }
+  }, [downloadLink.active]);
 
   return (
     <DashboardLayout>
@@ -113,6 +131,9 @@ export default function CartContainer() {
                 <FiTrash style={{ color: 'red' }} />
               </IconButton>
             </Tooltip>
+            {downloadLink.active && (
+              <a href={downloadLink.url} download ref={linkRef}></a>
+            )}
           </Grid>
           <Grid
             xs={12}

@@ -7,8 +7,8 @@ import CompanyLogo from './CompanyLogo';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { AuthContext } from '../../../context/AuthContext';
 import { useRouter } from 'next/router';
-import { IoCart } from 'react-icons/io5';
-import { MdOutlineInventory, MdManageAccounts } from 'react-icons/md';
+import linksData from './links';
+
 
 export default function SideNavigationBar({
   sideBarOpen,
@@ -24,27 +24,8 @@ export default function SideNavigationBar({
     });
     router.push('/');
   };
+  const links = linksData(languageSelected);
 
-  const links = [
-    {
-      id: 0,
-      title: languageSelected['PRODUCTS'],
-      url: '/catalog',
-      Icon: <MdOutlineInventory />,
-    },
-    {
-      id: 1,
-      title: languageSelected['CART'],
-      url: '/cart',
-      Icon: <IoCart />,
-    },
-    {
-      id: 3,
-      title: languageSelected['MANAGE_ACCOUNTS'],
-      url: '/users',
-      Icon: <MdManageAccounts />,
-    },
-  ];
 
   return (
     <Portal name='side-navbar'>

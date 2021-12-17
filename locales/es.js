@@ -10,6 +10,7 @@ const spanish_locale = {
   CATEGORIES: 'Categorías',
   SEARCH_PRODUCT_BY_BRAND: 'Explora nuestras marcas',
   UNIT_PRICE: 'Precio unitario',
+  WHOLESALER_PRICE: 'Precio Wholesaler',
   ADD_TO_CART: 'Añadir al carrito',
   PRODUCTS: 'Productos',
   CART: 'Carrito',
@@ -63,6 +64,7 @@ const spanish_locale = {
   WRONG_CREDENTIALS: 'Correo electrónico o contraseña incorrectos',
   ADDED_TO_CART: 'Producto agregado al carrito',
   NUMBER_OF_ITEMS: 'Número de productos',
+  INVALID_QUANTITY: "Cantidad invalida",
   EXCEEDED_PRODUCT_LIMIT: (maxQty) => `Cantidad máxima de producto disponible excedida(${maxQty})`,
   NO_PRODUCTS_IN_CART: 'No hay productos en el carrito',
 };

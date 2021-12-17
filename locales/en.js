@@ -10,6 +10,7 @@ const english_locale = {
   CATEGORIES: 'Categories',
   SEARCH_PRODUCT_BY_BRAND: 'Explore our brands',
   UNIT_PRICE: 'Unit price',
+  WHOLESALER_PRICE: 'Wholesaler price',
   ADD_TO_CART: 'Add to cart',
   PRODUCTS: 'Products',
   CART: 'Cart',
@@ -62,6 +63,7 @@ const english_locale = {
   WRONG_CREDENTIALS: 'Wrong email or password',
   ADDED_TO_CART: 'Product added to cart',
   NUMBER_OF_ITEMS: 'Number of products',
+  INVALID_QUANTITY: 'Invalid quantity',
   EXCEEDED_PRODUCT_LIMIT: (maxQty) =>
     `Exceeded max product quantity available(${maxQty})`,
   NO_PRODUCTS_IN_CART: 'No products in cart',
